@@ -1,0 +1,8 @@
+# https://dart.dev/tools/private-files
+# Created by `dart pub`
+.idea/
+*.iml
+out/
+target/
+build/
+.dart_tool/

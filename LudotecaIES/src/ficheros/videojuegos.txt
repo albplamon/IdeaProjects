@@ -1,0 +1,4 @@
+-El juego con id 119 se llama Hades, la plataforma es PC, cuesta 20.0 € y quedan 10 unidades
+
+-El juego con id 101 se llama Órbita, la plataforma es PC, cuesta 19.95 € y quedan 7 unidades
+

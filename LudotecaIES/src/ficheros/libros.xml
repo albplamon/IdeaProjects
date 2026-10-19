@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<libros>
+    <libro ID="1">
+        <titulo>Dune</titulo>
+        <autor>Frank Herbert</autor>
+    </libro>
+    <libro ID="2">
+        <titulo>Harry Potter</titulo>
+        <autor>J.K. Rowling</autor>
+    </libro>
+    <libro ID="3">
+    <titulo>1986</titulo>
+    <autor>George Orwell</autor>
+</libro>
+</libros>

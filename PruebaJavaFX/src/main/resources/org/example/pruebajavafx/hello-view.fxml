@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="main" fx:controller="org.example.pruebajavafx.MainController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
         <menus>
@@ -28,11 +28,39 @@
    <center>
       <SplitPane fx:id="splitMain" dividerPositions="0.7157534246575342" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
-          <AnchorPane fx:id="comandos" minHeight="0.0" minWidth="0.0" prefHeight="373.0" prefWidth="207.0">
+            <AnchorPane minHeight="0.0" minWidth="0.0">
+                <children>
+                    <VBox spacing="5.0"
+                          AnchorPane.topAnchor="10.0"
+                          AnchorPane.bottomAnchor="10.0"
+                          AnchorPane.leftAnchor="10.0"
+                          AnchorPane.rightAnchor="10.0">
+
+                        <Label text="Terminal" />
+
+                        <TextArea fx:id="terminalSalida"
+                                  editable="false"
+                                  wrapText="true"
+                                  promptText="Bienvenido a CMD for Dummies..."
+                                  VBox.vgrow="ALWAYS" />
+
+                        <HBox spacing="5.0" alignment="CENTER_LEFT">
+                            <Label text="C:\>" />
+                            <TextField fx:id="campoComando"
+                                       promptText="Escribe un comando..."
+                                       onAction="#ejecutarComando"
+                                       HBox.hgrow="ALWAYS" />
+                            <Button text="Ejecutar"
+                                    onAction="#ejecutarComando" />
+                        </HBox>
+
+                    </VBox>
+                </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="373.0" prefWidth="207.0">
                <children>
                   <ScrollBar fx:id="scrollBar" layoutX="153.0" layoutY="-1.0" orientation="VERTICAL" prefHeight="373.0" prefWidth="14.0" />
-                  <ListView fx:id="listaComandos" editable="true" fixedCellSize="25.0" layoutY="-2.0" prefHeight="376.0" prefWidth="154.0" />
+                  <ListView fx:id="listaComandos" fixedCellSize="25.0" layoutY="-2.0" prefHeight="376.0" prefWidth="154.0" />
                </children>
             </AnchorPane>
         </items>

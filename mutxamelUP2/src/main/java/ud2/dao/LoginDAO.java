@@ -1,6 +1,8 @@
 package ud2.dao;
 import ud2.model.Login;
 import ud2.util.DatabaseConnection;
+
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,8 @@ public class LoginDAO {
         } catch (SQLException e) {
             System.err.printf("Error SQL en obtenerTodos (%s): %s%n", e.getSQLState(),
                     e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return analistas;
     }
@@ -46,8 +50,8 @@ public class LoginDAO {
                     }
                 }
             }
-        } catch (SQLException e) {
-            System.err.printf("Error SQL al buscar analista (%s): %s%n", e.getSQLState(),
+        } catch (SQLException | IOException e) {
+            System.err.printf("Error SQL al buscar analista (%s): %s%n", e.getMessage(),
                     e.getMessage());
         }
         return null; // Si no existe, devolvemos null
@@ -63,8 +67,8 @@ public class LoginDAO {
                 int filasAfectadas = ps.executeUpdate();
                 return filasAfectadas > 0;
             }
-        } catch (SQLException e) {
-            System.err.printf("Error SQL al insertar analista (%s): %s%n", e.getSQLState(),
+        } catch (SQLException | IOException e) {
+            System.err.printf("Error SQL al insertar analista (%s): %s%n", e.getMessage(),
                     e.getMessage());
             return false;
         }

@@ -99,4 +99,42 @@ public class UnidadDAO {
                 rs.getString("estado"),
                 rs.getInt("responsable_id"));
     }
+
+    public void iniciarCampaniaPruebas(int id1, int id2){
+        String sql = "UPDATE unidades SET estado = 'EN_ENSAYOS' WHERE id = ?";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            con.setAutoCommit(false);
+
+
+            if (id1 == id2) {
+                System.out.println("Los identificadores deben ser distintos");
+                return;
+            }
+                ps.setInt(1,id1);
+                int filas1 = ps.executeUpdate();
+
+                if (filas1 != 1){
+                    con.rollback();
+                    System.out.println("Operacion cancelada");
+                    return;
+                }
+                ps.setInt(1,id2);
+                int filas2 = ps.executeUpdate();
+
+                if(filas2 != 1){
+                    con.rollback();
+                    System.out.println("Operacion cancelada");
+                    return;
+                }
+                con.commit();
+                System.out.println("Campaña iniciada con éxito!");
+
+
+        } catch (SQLException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }

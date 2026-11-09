@@ -1,23 +1,25 @@
 package util;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DatabaseConnection {
-    private static Connection connection = null;
+
     private DatabaseConnection() {}
-    static {
-        String url = "jdbc:postgresql://localhost:5432/plsdspace_lab";
-        String user = "postgres";
-        String password = "postgres"; // Contraseña de tu PostgreSQL
-        try {
-            connection = DriverManager.getConnection(url, user, password);
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+    public static Connection getConnection() throws IOException, SQLException {
+        Properties props = new Properties();
+        try (FileInputStream in = new FileInputStream("config.properties")) {
+            props.load(in);
         }
-    }
-    public static Connection getConnection() {
-        return connection;
+        String url = props.getProperty("db.url");
+        String user = props.getProperty("db.user");
+        String password = props.getProperty("db.password");
+
+        return DriverManager.getConnection(url, user, password);
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 public class MainApp {
     public static void main(String[] args) {
         LoginDAO loginDAO = new LoginDAO();
-        SoftwareAuditadoDAO dao = new SoftwareAuditadoDAO();
+//        SoftwareAuditadoDAO dao = new SoftwareAuditadoDAO();
 //        // 1. Insertamos o verificamos a la analista Silvia en PostgreSQL
 //        if (loginDAO.buscarPorUserName("Silvia") == null) {
 //            Login silvia = new Login("Silvia", "silvia@silvia.es");
@@ -38,28 +38,32 @@ public class MainApp {
 //        for (SoftwareAuditado app : criticas) {
 //            System.out.println(app);
 //        }
-//        try (Connection con = DatabaseConnection.getConnection()) {
-//
-//            System.out.println("Conexión correcta con PostgreSQL.");
-//
-//        } catch (IOException e) {
-//
-//            System.out.println("Error de configuración: " + e.getMessage());
-//
-//        } catch (SQLException e) {
-//
-//            System.out.println("Error SQL: " + e.getMessage());
-//        }
-//
-//        SoftwareAuditadoDAO dao = new SoftwareAuditadoDAO();
+        try (Connection con = DatabaseConnection.getConnection()) {
+
+            System.out.println("Conexión correcta con PostgreSQL.");
+
+        } catch (IOException e) {
+
+            System.out.println("Error de configuración: " + e.getMessage());
+
+        } catch (SQLException e) {
+
+            System.out.println("Error SQL: " + e.getMessage());
+        }
+
+        SoftwareAuditadoDAO dao = new SoftwareAuditadoDAO();
 //// Prueba A: dos códigos existentes y distintos.
 //        boolean correcta = dao.actualizarDosNiveles(1, 4, 2, 5);
 //        System.out.println("Operación correcta: " + correcta);
 //// Prueba B: el segundo código no existe.
 //        boolean fallida = dao.actualizarDosNiveles(1, 2, 99999, 3);
 //        System.out.println("Operación correcta: " + fallida);
-//        boolean fallida = dao.actualizarDosNiveles(1, 2, 99999, 3);
-//
-//        System.out.println("Operación correcta: " + fallida);
+
+//        //Prueba sesion 5
+//        int id = dao.insertarYObtenerCodigo("Aplicación de prueba", 3);
+//        System.out.println("Nuevo software auditado insertado con código: " + id);
+
+        boolean incidencia = dao.registrarSoftwareConIncidencia("Aplicación de prueba con incidencia", 2, null);
+        System.out.println("Registro de software con incidencia correcto: " + incidencia);
     }
 }

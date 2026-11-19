@@ -9,7 +9,7 @@ import java.util.List;
 public class SoftwareAuditadoDAO {
 
     // 1. READ: Listar todo el inventario de software auditado
-    public List<SoftwareAuditado> obtenerTodos() {
+    public static List<SoftwareAuditado> obtenerTodos() {
         List<SoftwareAuditado> lista = new ArrayList<>();
         String sql = "SELECT codigo, nombre, nivel_exposicion FROM software_auditado ORDER BY codigo";
         try (Connection con = DatabaseConnection.getConnection();
@@ -30,7 +30,7 @@ public class SoftwareAuditadoDAO {
     }
 
     // 2. READ (Filtrado): Buscar aplicaciones cuyo riesgo sea mayor o igual al mínimo indicado
-    public List<SoftwareAuditado> buscarPorRiesgoMinimo(int riesgoMinimo) {
+    public static List<SoftwareAuditado> buscarPorRiesgoMinimo(int riesgoMinimo) {
         List<SoftwareAuditado> filtrada = new ArrayList<>();
 
         String sql = "SELECT codigo, nombre, nivel_exposicion "
@@ -198,6 +198,69 @@ public class SoftwareAuditadoDAO {
             }
         } catch (IOException | SQLException e) {
             System.out.println("Error de conexión o configuración: " + e.getMessage());
+            return false;
+        }
+    }
+    public int insertarYObtenerCodigo(String nombre, int nivel) {
+        String sql = "INSERT INTO software_auditado (nombre, nivel_exposicion) VALUES (?,?)";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(
+                     sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, nombre);
+            ps.setInt(2, nivel);
+            if (ps.executeUpdate() != 1) {
+                return -1;
+            }
+            try (ResultSet claves = ps.getGeneratedKeys()) {
+                if (claves.next()) {
+                    return claves.getInt(1);
+                }
+            }
+        } catch (IOException | SQLException e) {
+            System.out.println("No se pudo insertar: " + e.getMessage());
+        }
+        return -1;
+    }
+    public boolean registrarSoftwareConIncidencia(String nombre, int nivel, String descripcion) {
+        String sqlSoftware = "INSERT INTO software_auditado (nombre, nivel_exposicion) VALUES (?, ?)";
+        String sqlIncidencia = "INSERT INTO incidencias (software_codigo, descripcion) VALUES (?, ?)";
+        try (Connection con = DatabaseConnection.getConnection()) {
+            con.setAutoCommit(false);
+            try {
+                int codigo;
+                try (PreparedStatement ps = con.prepareStatement(sqlSoftware, Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setString(1, nombre);
+                    ps.setInt(2, nivel);
+                    if (ps.executeUpdate() != 1) {
+                        throw new SQLException("No se insertó el software.");
+                    }
+                    try (ResultSet claves = ps.getGeneratedKeys()) {
+                        if (!claves.next()) {
+                            throw new SQLException("No se obtuvo la clave.");
+                        }
+                        codigo = claves.getInt(1);
+                    }
+                }
+                try (PreparedStatement ps = con.prepareStatement(sqlIncidencia)) {
+                    ps.setInt(1, codigo);
+                    ps.setString(2, descripcion);
+                    if (ps.executeUpdate() != 1) {
+                        throw new SQLException("No se insertó la incidencia.");
+                    }
+                }
+                con.commit();
+                return true;
+            } catch (SQLException e) {
+                try {
+                    con.rollback();
+                } catch (SQLException errorRollback) {
+                    System.err.println(errorRollback.getMessage());
+                }
+                System.err.println("Registro cancelado: " + e.getMessage());
+                return false;
+            }
+        } catch (IOException | SQLException e) {
+            System.err.println("Error de conexión: " + e.getMessage());
             return false;
         }
     }

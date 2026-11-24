@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class inventarioDAO {
 
-    public int consultarStock(int idProducto) throws SQLException, IOException {
+    public int consultarStock(Connection conn, int idProducto) throws SQLException, IOException {
 
         String sql = "SELECT stock FROM Inventario WHERE idProducto = ?";
 

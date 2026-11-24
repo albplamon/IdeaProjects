@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @ToString
 public class Pedido {
 
-    private int ID;
+    private int IdPedido;
     private int idCliente;
     private LocalDateTime fecha;
     private String status;

@@ -1,6 +1,6 @@
 package dao;
 
-import model.Pedido;
+
 import util.DatabaseConnection;
 
 import java.io.IOException;
@@ -28,6 +28,15 @@ public class inventarioDAO {
 
                 return -1;
             }
+        }
+    }
+    public boolean actualizarStock(Connection conn, int idProducto, int nuevoStock) throws SQLException {
+        String sql = "UPDATE Inventario SET stock = ? WHERE idProducto = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, nuevoStock);
+            ps.setInt(2, idProducto);
+            return ps.executeUpdate() == 1;
         }
     }
 }

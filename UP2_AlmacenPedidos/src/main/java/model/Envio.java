@@ -19,7 +19,7 @@ public class Envio {
     private int idProducto;
 
     // Constructor para crear un envío nuevo (el id lo genera la BD)
-    public Envio(LocalDateTime fechaEnvio, int idProducto) {
+    public Envio(int idProducto) {
         this.fechaEnvio = LocalDateTime.now();
         this.idProducto = idProducto;
     }

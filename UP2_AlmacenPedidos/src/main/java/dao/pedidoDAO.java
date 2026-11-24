@@ -32,4 +32,18 @@ public class pedidoDAO {
             return true;
         }
     }
+    public boolean actualizarEstado(Connection conn, int idPedido, String estado) throws SQLException{
+        String sql = "UPDATE Pedido SET status = ? WHERE idPedido = ?";
+
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
+
+            ps.setString(1, estado);
+            ps.setInt(2, idPedido);
+
+            int filas = ps.executeUpdate();
+
+            return filas > 0;
+        }
+
+    }
 }

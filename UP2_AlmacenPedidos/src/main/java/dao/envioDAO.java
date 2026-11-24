@@ -5,6 +5,7 @@ import model.Envio;
 import java.sql.*;
 
 public class envioDAO {
+
     public boolean insertar(Connection conn, Envio envio) throws SQLException {
         String sql = "INSERT INTO Envio (fechaEnvio, idProducto) VALUES (?, ?)";
 

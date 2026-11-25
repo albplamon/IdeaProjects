@@ -137,4 +137,40 @@ public class UnidadDAO {
         }
 
     }
+    // Opción 7 (modelo A): listar unidades por estado
+    public List<Unidad> listarPorEstado(String estado) throws IOException, SQLException {
+        String sql = "SELECT id, codigo, modelo, estado, responsable_id FROM unidades WHERE estado = ? ORDER BY id";
+        List<Unidad> lista = new ArrayList<>();
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, estado);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapear(rs));
+                }
+            }
+        }
+        return lista;
+    }
+    // Opción 7 (modelo B): listar unidades por modelo
+    public List<Unidad> listarPorModelo(String modelo) throws IOException, SQLException {
+        String sql = "SELECT id, codigo, modelo, estado, responsable_id FROM unidades WHERE modelo = ? ORDER BY id";
+        List<Unidad> lista = new ArrayList<>();
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, modelo);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapear(rs));
+                }
+            }
+        }
+        return lista;
+    }
 }

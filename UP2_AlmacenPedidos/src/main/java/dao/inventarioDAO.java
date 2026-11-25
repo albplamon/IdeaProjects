@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class inventarioDAO {
 
-    public int consultarStock(Connection conn, int idProducto) throws SQLException, IOException {
+    public int consultarStock(int idProducto) throws SQLException, IOException {
 
         String sql = "SELECT stock FROM Inventario WHERE idProducto = ?";
 
@@ -30,13 +30,18 @@ public class inventarioDAO {
             }
         }
     }
-    public boolean actualizarStock(Connection conn, int idProducto, int nuevoStock) throws SQLException {
+    public boolean actualizarStock(int idProducto, int nuevoStock) {
         String sql = "UPDATE Inventario SET stock = ? WHERE idProducto = ?";
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
             ps.setInt(1, nuevoStock);
             ps.setInt(2, idProducto);
             return ps.executeUpdate() == 1;
+        } catch (IOException | SQLException e) {
+            System.err.println("Error al actualizar stock " + e.getMessage());
+            return false;
         }
     }
 }

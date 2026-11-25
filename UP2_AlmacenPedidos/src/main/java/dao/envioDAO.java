@@ -1,15 +1,20 @@
 package dao;
 
 import model.Envio;
+import util.DatabaseConnection;
 
+import java.io.IOException;
 import java.sql.*;
 
 public class envioDAO {
 
-    public boolean insertar(Connection conn, Envio envio) throws SQLException {
+    public boolean insertar(Envio envio) {
         String sql = "INSERT INTO Envio (fechaEnvio, idProducto) VALUES (?, ?)";
 
-        try (PreparedStatement ps = conn.prepareStatement(sql, new String[]{"idenvio"})) {
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+
             ps.setTimestamp(1, Timestamp.valueOf(envio.getFechaEnvio()));
             ps.setInt(2, envio.getIdProducto());
 
@@ -22,6 +27,9 @@ public class envioDAO {
                 }
             }
             return true;
+        } catch (IOException | SQLException e ) {
+            System.err.println("Error al insertar: " + e.getMessage());
+            return false;
         }
     }
 }

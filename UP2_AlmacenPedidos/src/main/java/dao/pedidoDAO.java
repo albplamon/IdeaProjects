@@ -6,13 +6,18 @@ import util.DatabaseConnection;
 import java.io.IOException;
 import java.sql.*;
 
+
 public class pedidoDAO {
 
-    public boolean procesarPedido(Connection conn, Pedido pedido) throws SQLException {
+    public boolean procesarPedido(Pedido pedido, int stockActualProducto){
+
         String sql = "INSERT INTO Pedido (idCliente, fecha, status, idProducto, cantidad) "
                 + "VALUES (?, ?, ?, ?, ?)";
 
-        try (PreparedStatement ps = conn.prepareStatement(sql, new String[]{"idpedido"})) {
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+
             ps.setInt(1, pedido.getIdCliente());
             ps.setTimestamp(2, Timestamp.valueOf(pedido.getFecha()));
             ps.setString(3, pedido.getStatus());
@@ -30,12 +35,16 @@ public class pedidoDAO {
                 }
             }
             return true;
+        } catch (IOException | SQLException e) {
+            System.err.println("Error al procesar pedido: " + e.getMessage());
+            return false;
         }
     }
-    public boolean actualizarEstado(Connection conn, int idPedido, String estado) throws SQLException{
+    public boolean actualizarEstado(int idPedido, String estado){
         String sql = "UPDATE Pedido SET status = ? WHERE idPedido = ?";
 
-        try(PreparedStatement ps = conn.prepareStatement(sql)){
+        try(Connection con = DatabaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql)){
 
             ps.setString(1, estado);
             ps.setInt(2, idPedido);
@@ -43,6 +52,9 @@ public class pedidoDAO {
             int filas = ps.executeUpdate();
 
             return filas > 0;
+        } catch (IOException | SQLException e) {
+            System.err.println("Error al actualizar estado: " + e.getMessage());
+            return false;
         }
 
     }
